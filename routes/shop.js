@@ -6,7 +6,9 @@ const router = express.Router()
 
 // import controllers 
 const { 
-  getProducts, getProduct, getIndex, getCart, postCart, getCheckout, getOrders } = require('../controllers/shop')
+  getProducts, getProduct, getIndex, 
+  getCart, postCart, getCheckout, 
+  getOrders, postCartDeleteProduct } = require('../controllers/shop')
 
 router.get('/', getIndex)
 
@@ -17,6 +19,8 @@ router.get('/product/:productId', getProduct)
 router.get('/cart', getCart)
 
 router.post('/cart', postCart)
+
+router.post('/cart-delete-item', postCartDeleteProduct)
 
 router.get('/orders', getOrders)
 

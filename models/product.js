@@ -59,7 +59,7 @@ module.exports = class Product {
 
   static deleteById(id) {
     this.fetchAll().then( allProduct => {
-      const prodcut = allProduct.find(product => product.id === id)
+      const product = allProduct.find(product => product.id === id)
       const updatedProduct = allProduct.filter(product => product.id !== id);
       fs.writeFile(filePath, JSON.stringify(updatedProduct), err => {
         if (!err) {

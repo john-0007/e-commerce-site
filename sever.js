@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const roodDir = require('./helper/path')
 
-
+const db = require('./helper/database')
 const app = express()
 
 app.set('view engine','ejs')
@@ -15,6 +15,8 @@ const shopRoutes = require('./routes/shop')
 // Controllers
 
 const get404 = require('./controllers/error')
+
+db.execute('');
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
