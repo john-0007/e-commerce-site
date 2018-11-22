@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const roodDir = require('./helper/path')
 
-const db = require('./helper/database')
+const mongoConnect = require('./helper/database')
 const app = express()
 
 app.set('view engine','ejs')
@@ -16,7 +16,7 @@ const shopRoutes = require('./routes/shop')
 
 const get404 = require('./controllers/error')
 
-db.execute('');
+// db.execute('');
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
@@ -34,6 +34,11 @@ app.use((req, res, next) => {
   })
 })
 
-app.listen(3000,() => {
-  console.log('App is running! and up')
+// app.listen(3000,() => {
+//   console.log('App is running! and up')
+// })
+
+mongoConnect((client) => {
+  console.log(client)
+  app.listen(3000)
 })

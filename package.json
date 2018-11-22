@@ -15,8 +15,8 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
-    "mysql2": "^1.6.4",
-    "pug": "^2.0.3"
+    "mongodb": "^3.1.10",
+    "mysql2": "^1.6.4"
   },
   "devDependencies": {
     "nodemon": "^1.18.5"
