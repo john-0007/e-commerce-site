@@ -3,8 +3,9 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const roodDir = require('./helper/path')
 
-const mongoConnect = require('./helper/database')
 const app = express()
+const { mongoConnect } = require('./helper/database')
+const User = require('./models/user')
 
 app.set('view engine','ejs')
 
@@ -20,10 +21,23 @@ const get404 = require('./controllers/error')
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
+
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
 });
+
+app.use((req, res, next) => {
+  User.findById('5bf7ea1b1c9d4400007989dc')
+  .then(user => {
+    req.user = user
+    next()
+  })
+  .catch(err => {
+    console.log(err)
+  })
+});
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes)
 
@@ -38,7 +52,6 @@ app.use((req, res, next) => {
 //   console.log('App is running! and up')
 // })
 
-mongoConnect((client) => {
-  console.log(client)
+mongoConnect(() => {
   app.listen(3000)
 })

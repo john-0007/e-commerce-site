@@ -5,9 +5,9 @@
 <body>
     <%- include('../includes/nav.ejs') %>
     <main>
-      <% if (prods.length > 0) { %>
+      <% if (products.length > 0) { %>
         <div class="grid">
-            <% for (let product of prods) { %>
+            <% for (let product of products) { %>
             <article class="card product-item">
                 <header class="card__header">
                     <h1 class="product__title"><%= product.title %></h1> 
@@ -20,7 +20,7 @@
                     <p class="product__description"><%= product.description %></p>
                 </div>
                 <div class="card__actions">
-                    <a href="/product/<%= product.id %>" class="btn">Details</a>
+                    <a href="/product/<%= product._id %>" class="btn">Details</a>
                     <%- include('../includes/add-to-cart.ejs',{product: product}) %>
                 </div>
             </article>

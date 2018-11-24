@@ -32,6 +32,8 @@ const getDb = () => {
 	if (_db) {
 		return _db
 	}
-	throw 'No Database Found'
+	throw 'No Database Found!'
 }
-module.exports = mongoConnect
+
+exports.mongoConnect = mongoConnect
+exports.getDb = getDb
