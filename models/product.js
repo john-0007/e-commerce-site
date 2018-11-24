@@ -11,7 +11,7 @@ const { getDb } = require('../helper/database')
     id,
     userId
     ) {
-    this.title = tilte,
+    this.title = tilte, 
     this.price = price
     this.description = description
     this.img = img

@@ -8,7 +8,7 @@ class User {
 	}
 
 	save() {
-		const db = getDb()
+		const db = getDb()  
 		return db
 		.collection('users')
 		.insertOne(this)

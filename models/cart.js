@@ -12,7 +12,7 @@ module.exports = class Cart {
     fs.readFile(filePath, (err, fileContent) => {
       let cart = { products: [], totalPrice: 0 }
       if (!err) {
-        cart = JSON.parse(fileContent) 
+        cart = JSON.parse(fileContent)
       } 
 
       // Analyze the cart => find the existing product 
