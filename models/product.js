@@ -62,7 +62,7 @@ const { getDb } = require('../helper/database')
     .find({_id: new mongodb.ObjectID(productId)})
     .next()
     .then(product => {
-      console.log(product)
+      console.log('find product',product)
       return product
     })
     .catch(err => {
