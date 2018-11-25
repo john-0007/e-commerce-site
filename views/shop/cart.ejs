@@ -1,5 +1,5 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/product.css">
+<link rel="stylesheet" href="/css/cart.css">
 </head>
 
 <body>
@@ -18,7 +18,10 @@
                    </p>
                 <% }) %>
             </ul>
-
+            <hr>
+            <form action="/create-order" method="POST">
+                <button class="btn" type="submit">Order</button>
+            </form>
         <% } else { %>
             <h2>No Product in the Cart</h2>
         <% } %>

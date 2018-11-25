@@ -64,12 +64,28 @@ exports.postCartDeleteProduct = (req, res, next) => {
   })
 }
 
-exports.getOrders = (req,res, next) => {
-  res.render('shop/orders', {
-    pageTitle: 'Your Orders',
+exports.postOrder = (req,res, next) => {
+  req.user.addOrder()
+  .then(() => {
+    res.render('shop/orders', {
+      pageTitle: 'Your Orders',
+    })
+  })
+  .catch(err => {
+    console.log(err)
   })
 }
 
+exports.getOrders = (req,res, next) => {
+  req.user.getOrder()
+  .then(orders => {
+    console.log('order', orders)
+    res.render('shop/orders', {
+      pageTitle: 'Your Orders',
+      orders
+    })
+  })
+}
 exports.getCheckout = () => {
   res.render('shop/checkout', {
     pageTitle: 'Checkout',
