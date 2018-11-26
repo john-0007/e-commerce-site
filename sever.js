@@ -2,10 +2,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path');
 const roodDir = require('./helper/path')
+const mongoose = require('mongoose')
 
 const app = express()
-const { mongoConnect } = require('./helper/database')
-const User = require('./models/user')
+// const User = require('./models/user')
 
 app.set('view engine','ejs')
 
@@ -27,17 +27,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  User.findById('5bf7ea1b1c9d4400007989dc')
-  // {username, email, cart, _id}
-  .then((user) => {
-    req.user = new User(user.name, user.email, user.cart, user._id)
-    next()
-  })
-  .catch(err => {
-    console.log(err)
-  })
-});
+// app.use((req, res, next) => {
+//   User.findById('5bf7ea1b1c9d4400007989dc')
+//   // {username, email, cart, _id}
+//   .then((user) => {
+//     req.user = new User(user.name, user.email, user.cart, user._id)
+//     next()
+//   })
+//   .catch(err => {
+//     console.log(err)
+//   })
+// });
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes)
@@ -49,10 +49,11 @@ app.use((req, res, next) => {
   })
 })
 
-// app.listen(3000,() => {
-//   console.log('App is running! and up')
-// })
-
-mongoConnect(() => {
+mongoose
+.connect('mongodb+srv://JohnJoseph:john54321@cluster0-v0bnm.mongodb.net/shop?retryWrites=true')
+.then(() => {
   app.listen(3000)
+})
+.catch(err => {
+  console.log(err)
 })
