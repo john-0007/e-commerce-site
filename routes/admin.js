@@ -8,7 +8,8 @@ const products = []
 // Controllers 
 const {
 	getAddProduct, postAddProduct, getProducts, 
-	getEditProduct, postEditProduct, postDeleteProduct } = require('../controllers/admin')
+	getEditProduct, postEditProduct, postDeleteProduct 
+} = require('../controllers/admin')
 
 router.get('/add-product', getAddProduct)
 
