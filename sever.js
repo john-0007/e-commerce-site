@@ -11,6 +11,7 @@ app.set('view engine','ejs')
 // Routes 
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
+const authRoutes = require('./routes/auth')
 
 // Controllers
 
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes)
+app.use(authRoutes)
 
 app.use((req, res, next) => {
   res.status(404).render('404',{ 
