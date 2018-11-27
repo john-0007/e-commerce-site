@@ -11,7 +11,9 @@
       <div class="card__content">
         <h2 class="product__price">$<%= product.price %></h2>
         <p class="product__description"><%= product.description %></p>
-        <%- include('../includes/add-to-cart.ejs') %>
+        <% if (isLoggedIn) { %>
+          <%- include('../includes/add-to-cart.ejs',{product: product}) %>
+        <% } %>
      </div>
     </main>
 <%- include('../includes/foot.ejs') %>
