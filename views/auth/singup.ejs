@@ -5,7 +5,7 @@
 <body>
     <%- include('../includes/nav.ejs') %> 
     <main>
-        <form class="product-form" action="/login" method="POST">
+        <form class="product-form" action="/singup" method="POST">
             <div class="form-control">
                 <label for="title">Email</label>
                 <input type="text" name="email" id="email">
@@ -14,7 +14,11 @@
                 <label for="img">Password</label>
                 <input type="password" name="password" id="password">
             </div>
-            <button class="btn" type="submit">Login</button>
+            <div class="form-control">
+                <label for="img">Confirm Password</label>
+                <input type="text" name="confirmpassword" id="confirmpassword">
+            </div>
+            <button class="btn" type="submit">Singup</button>
         </form>
     </main>
 <%- include('../includes/foot.ejs') %>
