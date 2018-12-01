@@ -4,6 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
+const csrf = require('csurf')
 
 
 const app = express()
@@ -14,6 +15,8 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 })
+const csrfProtection = csrf()
+
 app.set('view engine','ejs')
 
 // Routes 
@@ -37,15 +40,16 @@ app.use(
     store
   })
 )
+app.use(csrfProtection)
 
 
 app.use((req, res, next) => {
-  // if (!req.session.user) {
-  //   return next()
-  // }
-  User.findById('5bfd630fd8a502080b987088')
+  if (!req.session.user) {
+    return next()
+  }
+  User.findById(req.session.user._id)
   .then(user => {
-    console.log('usersssss',user)
+    console.log('user',user)
 		req.user = user
 		next()
   })
@@ -57,6 +61,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   res.locals.path = req.path;
   res.locals.isLoggedIn = req.session.isLoggedIn
+  res.locals.csrfToken = req.csrfToken()
   next()
 })
 

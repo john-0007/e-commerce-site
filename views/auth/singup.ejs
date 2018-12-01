@@ -19,6 +19,7 @@
                 <input type="text" name="confirmpassword" id="confirmpassword">
             </div>
             <button class="btn" type="submit">Singup</button>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         </form>
     </main>
 <%- include('../includes/foot.ejs') %>

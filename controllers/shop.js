@@ -50,6 +50,7 @@ exports.postCart = (req,res, next) => {
   const { productId } = req.body
   Product.findById(productId)
   .then(product => {
+    console.log('product',product)
     return req.user.addToCart(product)
   })
   .then(result => {
@@ -79,7 +80,7 @@ exports.postOrder = (req,res, next) => {
     })
     const order = new Order({
       user: {
-        name: req.user.name,
+        email: req.user.email,
         userId: req.user
       },
       products
