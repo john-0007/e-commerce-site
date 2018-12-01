@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
+const flash = require('connect-flash')
 
 
 const app = express()
@@ -40,6 +41,7 @@ app.use(
     store
   })
 )
+app.use(flash())
 app.use(csrfProtection)
 
 

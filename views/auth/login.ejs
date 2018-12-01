@@ -5,6 +5,11 @@
 <body>
     <%- include('../includes/nav.ejs') %> 
     <main>
+        <% if (errorMessage) {%>
+            <div class="user-message user-message--error">
+                <%= errorMessage %>
+            </div>
+        <% } %>
         <form class="product-form" action="/login" method="POST">
             <div class="form-control">
                 <label for="title">Email</label>
