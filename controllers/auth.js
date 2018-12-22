@@ -1,3 +1,5 @@
+const crypto = require('crypto')
+
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
@@ -91,4 +93,50 @@ exports.postSingup =  (req, res, next) => {
 		.catch(err => {
 			console.log(err)
 		})
+}
+
+exports.getReset = (req, res, next) => {
+	let errorMessage = req.flash('error')
+	errorMessage.length > 0 ? errorMessage = errorMessage[0] : errorMessage = null
+	res.render('auth/reset', {
+		pageTitle: 'Reset Password',
+		errorMessage
+	})
+}
+
+exports.postReset = (req, res, next) => {
+	const email = req.body.email
+	console.log(email)
+	crypto.randomBytes(32, (err, Buffer) => {
+		if (err) {
+			console.log(err)
+			return req.redirect('/reset')
+		}
+		const token = Buffer.toString('hex')
+		User.findOne({ email: email })
+		.then(user => {
+			if (!user) {
+				req.flash('error', 'No account with that email found')
+				return res.redirect('/reset')
+			}
+			user.resetToken = token
+			user.resetTokenExpiration = Date.now() + 3600000
+			return user.save()
+		})
+		.then(() => {
+			res.redirect('/')
+			transporter.sendMail({
+				to: email,
+				from: 'shop@j&J.com',
+				subject: 'Reset password',
+				html: `
+				<p>You requested a password reset</p>
+				<p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
+				`
+			})
+		})
+		.catch( err => {
+			console.log(err)
+		})
+	})
 }

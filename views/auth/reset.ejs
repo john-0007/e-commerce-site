@@ -10,20 +10,13 @@
                 <%= errorMessage %>
             </div>
         <% } %>
-        <form class="product-form" action="/login" method="POST">
+        <form class="product-form" action="/reset" method="POST">
             <div class="form-control">
                 <label for="title">Email</label>
                 <input type="text" name="email" id="email">
             </div>
-            <div class="form-control">
-                <label for="img">Password</label>
-                <input type="password" name="password" id="password">
-            </div>
-            <button class="btn" type="submit">Login</button>
+            <button class="btn" type="submit">Reset Password</button>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         </form>
-        <div class="centered">
-            <a class="centered" href="/reset">Reset Password</a>
-        </div>
     </main>
 <%- include('../includes/foot.ejs') %>
