@@ -22,29 +22,34 @@ exports.getLogin = (req, res, next) => {
 }
 
 exports.postLogin = (req, res, next) => {
-	const { email, password } = req.body
-	User.findOne({ email })
-  .then(user => {
-		if (!user) {
-			req.flash('error', 'Invailid email or password')
-			res.redirect('/login')
-		}
-		bcrypt.compare(password, user.password)
-			.then(isMatch => {
-				if (isMatch) {
-					req.session.isLoggedIn = true
-					req.session.user = user
-					return req.session.save(err => {
-						console.log(err)
-						res.redirect('/')
-					})
-				}
-				return res.redirect('/login')
-			})
-  })
-	.catch(err => {
-		console.log(err)
-	})
+	const {
+		email,
+		password
+	} = req.body
+	User.findOne({
+			email
+		})
+		.then(user => {
+			if (!user) {
+				req.flash('error', 'Invailid email or password')
+				res.redirect('/login')
+			}
+			bcrypt.compare(password, user.password)
+				.then(isMatch => {
+					if (isMatch) {
+						req.session.isLoggedIn = true
+						req.session.user = user
+						return req.session.save(err => {
+							console.log(err)
+							res.redirect('/')
+						})
+					}
+					return res.redirect('/login')
+				})
+		})
+		.catch(err => {
+			console.log(err)
+		})
 }
 
 exports.postLogout = (req, res, next) => {
@@ -54,18 +59,24 @@ exports.postLogout = (req, res, next) => {
 	})
 }
 
-exports.getSingup =  (req, res, next) => {
-		let errorMessage = req.flash('error')
-		errorMessage.length > 0 ? errorMessage = errorMessage[0] : errorMessage = null
-		res.render('auth/singup', {
-			pageTitle: 'singup',
-			errorMessage
-		})
+exports.getSingup = (req, res, next) => {
+	let errorMessage = req.flash('error')
+	errorMessage.length > 0 ? errorMessage = errorMessage[0] : errorMessage = null
+	res.render('auth/singup', {
+		pageTitle: 'singup',
+		errorMessage
+	})
 }
 
-exports.postSingup =  (req, res, next) => {
-	const { email, password, confirmpasswor } = req.body
-	User.findOne({email})
+exports.postSingup = (req, res, next) => {
+	const {
+		email,
+		password,
+		confirmpasswor
+	} = req.body
+	User.findOne({
+			email
+		})
 		.then(userDoc => {
 			if (userDoc) {
 				req.flash('error', 'This email address already exit. Please try another one')
@@ -76,7 +87,9 @@ exports.postSingup =  (req, res, next) => {
 					const user = new User({
 						email,
 						password: hashedPassword,
-						cart: { items: [] }
+						cart: {
+							items: []
+						}
 					})
 					return user.save()
 				})
@@ -113,30 +126,50 @@ exports.postReset = (req, res, next) => {
 			return req.redirect('/reset')
 		}
 		const token = Buffer.toString('hex')
-		User.findOne({ email: email })
-		.then(user => {
-			if (!user) {
-				req.flash('error', 'No account with that email found')
-				return res.redirect('/reset')
-			}
-			user.resetToken = token
-			user.resetTokenExpiration = Date.now() + 3600000
-			return user.save()
-		})
-		.then(() => {
-			res.redirect('/')
-			transporter.sendMail({
-				to: email,
-				from: 'shop@j&J.com',
-				subject: 'Reset password',
-				html: `
+		User.findOne({
+				email: email
+			})
+			.then(user => {
+				if (!user) {
+					req.flash('error', 'No account with that email found')
+					return res.redirect('/reset')
+				}
+				user.resetToken = token
+				user.resetTokenExpiration = Date.now() + 3600000
+				return user.save()
+			})
+			.then(() => {
+				res.redirect('/')
+				transporter.sendMail({
+					to: email,
+					from: 'shop@j&J.com',
+					subject: 'Reset password',
+					html: `
 				<p>You requested a password reset</p>
 				<p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
 				`
+				})
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	})
+}
+
+exports.getNewPassword = (req, res, next) => {
+	const passwordToken = req.params.token
+	User.findOne({ resetToken: passwordToken, resetTokenExpiration: {$gt: Date.now() }})
+		.then(user => {
+			let errorMessage = req.flash('error')
+			errorMessage.length > 0 ? errorMessage = errorMessage[0] : errorMessage = null
+			res.render('auth/new-password', {
+				pageTitle: 'New Password',
+				errorMessage,
+				userId: user._id.toString(),
+				passwordToken
 			})
 		})
-		.catch( err => {
+		.catch(err => {
 			console.log(err)
 		})
-	})
 }
