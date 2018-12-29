@@ -4,6 +4,7 @@ const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const sendGridTransport = require('nodemailer-sendgrid-transport')
+const { validationResult } = require('express-validator/check')
 
 const transporter = nodemailer.createTransport(sendGridTransport({
 	auth: {
@@ -72,40 +73,38 @@ exports.postSingup = (req, res, next) => {
 	const {
 		email,
 		password,
-		confirmpasswor
 	} = req.body
-	User.findOne({
-			email
+	const errors = validationResult(req)
+	if (!errors.isEmpty()) {
+		return res.status(422).render('auth/singup', 
+		{
+			pageTitle: 'singup',
+			errorMessage: errors.array()[0].msg
 		})
-		.then(userDoc => {
-			if (userDoc) {
-				req.flash('error', 'This email address already exit. Please try another one')
-				return res.redirect('/singup')
-			}
-			return bcrypt.hash(password, 12)
-				.then(hashedPassword => {
-					const user = new User({
-						email,
-						password: hashedPassword,
-						cart: {
-							items: []
-						}
-					})
-					return user.save()
-				})
-				.then(() => {
-					res.redirect('/login')
-					return transporter.sendMail({
-						to: email,
-						from: 'shop@j&J.com',
-						subject: 'Singup succeeded!',
-						html: '<h1>You sucessfully singned up!</h1>',
-					})
-				})
+	}
+	bcrypt.hash(password, 12)
+		.then(hashedPassword => {
+			const user = new User({
+				email,
+				password: hashedPassword,
+				cart: {
+					items: []
+				}
+			})
+			return user.save()
 		})
-		.catch(err => {
-			console.log(err)
+		.then(() => {
+			res.redirect('/login')
+			return transporter.sendMail({
+				to: email,
+				from: 'shop@j&J.com',
+				subject: 'Singup succeeded!',
+				html: '<h1>You sucessfully singned up!</h1>',
+			})
 		})
+	.catch(err => {
+		console.log(err)
+	})
 }
 
 exports.getReset = (req, res, next) => {

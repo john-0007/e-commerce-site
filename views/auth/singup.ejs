@@ -10,7 +10,7 @@
                 <%= errorMessage %>
             </div>
         <% } %>
-        <form class="product-form" action="/singup" method="POST">
+        <form class="product-form" action="/singup" method="POST" novalidate>
             <div class="form-control">
                 <label for="title">Email</label>
                 <input type="text" name="email" id="email">
@@ -21,7 +21,7 @@
             </div>
             <div class="form-control">
                 <label for="img">Confirm Password</label>
-                <input type="text" name="confirmpassword" id="confirmpassword">
+                <input type="password" name="confirmpassword" id="confirmpassword">
             </div>
             <button class="btn" type="submit">Singup</button>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
