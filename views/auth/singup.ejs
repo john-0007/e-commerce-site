@@ -13,15 +13,32 @@
         <form class="product-form" action="/singup" method="POST" novalidate>
             <div class="form-control">
                 <label for="title">Email</label>
-                <input type="text" name="email" id="email">
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'email') ? 'invaild' : '' %>"
+                    type="text" 
+                    name="email" 
+                    id="email" 
+                    value="<%= oldInput.email %>"
+                    >
             </div>
             <div class="form-control">
                 <label for="img">Password</label>
-                <input type="password" name="password" id="password">
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'password') ? 'invaild' : '' %>"
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    value="<%= oldInput.password %>"
+                    >
             </div>
             <div class="form-control">
                 <label for="img">Confirm Password</label>
-                <input type="password" name="confirmpassword" id="confirmpassword">
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'confirmpassword') ? 'invaild' : '' %>"
+                    type="password" 
+                    name="confirmpassword" 
+                    id="confirmpassword" 
+                    value="<%= oldInput.confirmpassword %>">
             </div>
             <button class="btn" type="submit">Singup</button>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">

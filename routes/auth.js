@@ -10,7 +10,21 @@ const { getLogin, postLogin, postLogout,
 
 router.get('/login', getLogin)
 
-router.post('/login', postLogin)
+router.post('/login',
+  [
+    check('email')
+    .isEmail()
+    .withMessage('Please enter a vaild email address')
+    .normalizeEmail(),
+    body(
+      'password',
+      'Invaild Password'
+      )
+    .isLength({ min: 5 })
+    .isAlphanumeric()
+    .trim()
+  ],
+ postLogin)
 
 router.post('/logout', postLogout)
 
@@ -29,13 +43,15 @@ router.post('/singup',
        return Promise.reject('This email address already exit. Please try another one')
       }
     }) 
-  }),
+  })
+  .normalizeEmail(),
   body(
     'password',
     'Please enter a password with only numbers and text and least 5 characters.'
     )
     .isLength({ min: 5 })
-    .isAlphanumeric(),
+    .isAlphanumeric()
+    .trim(),
   body('confirmpassword')
     .custom((value, { req }) => {
       if (value !== req.body.password) {
@@ -43,6 +59,7 @@ router.post('/singup',
       }
       return true
     })
+    .trim()
 ],
 postSingup)
 

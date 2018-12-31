@@ -18,7 +18,12 @@ exports.getLogin = (req, res, next) => {
 	errorMessage.length > 0 ? errorMessage = errorMessage[0] : errorMessage = null
 	res.render('auth/login', {
 		pageTitle: 'Login',
-		errorMessage
+		errorMessage,
+		oldInput: {
+			email: '',
+			password: ''
+		},
+		validationErrors: []
 	})
 }
 
@@ -27,6 +32,18 @@ exports.postLogin = (req, res, next) => {
 		email,
 		password
 	} = req.body
+	const errors = validationResult(req)
+	if (!errors.isEmpty()) {
+		return res.status(422).render('auth/login', {
+			pageTitle: 'Login',
+			errorMessage: 'Invaild email or password',
+			oldInput: {
+				email,
+				password,
+			},
+			validationErrors: errors.array()
+		})
+	}
 	User.findOne({
 			email
 		})
@@ -45,7 +62,15 @@ exports.postLogin = (req, res, next) => {
 							res.redirect('/')
 						})
 					}
-					return res.redirect('/login')
+					return res.status(422).render('auth/login', {
+						pageTitle: 'Login',
+						errorMessage: 'Invaild email or password',
+						oldInput: {
+							email,
+							password,
+						},
+						validationErrors: []
+					})
 				})
 		})
 		.catch(err => {
@@ -65,7 +90,13 @@ exports.getSingup = (req, res, next) => {
 	errorMessage.length > 0 ? errorMessage = errorMessage[0] : errorMessage = null
 	res.render('auth/singup', {
 		pageTitle: 'singup',
-		errorMessage
+		errorMessage,
+		oldInput: {
+			email: '',
+			password: '',
+			confirmpassword: ''
+		},
+		validationErrors: []
 	})
 }
 
@@ -73,13 +104,21 @@ exports.postSingup = (req, res, next) => {
 	const {
 		email,
 		password,
+		confirmpassword
 	} = req.body
 	const errors = validationResult(req)
 	if (!errors.isEmpty()) {
+		console.log(errors.array())
 		return res.status(422).render('auth/singup', 
 		{
 			pageTitle: 'singup',
-			errorMessage: errors.array()[0].msg
+			errorMessage: errors.array()[0].msg,
+			oldInput: {
+				email,
+				password,
+				confirmpassword
+			},
+			validationErrors: errors.array()
 		})
 	}
 	bcrypt.hash(password, 12)
