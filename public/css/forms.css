@@ -22,6 +22,7 @@
   outline-color: #00695c;
 }
 
-.form-control input.invaild {
+.form-control input.invaild,
+.form-control textarea.invaild {
   border-color: red;
 }
