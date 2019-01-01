@@ -27,7 +27,7 @@ const authRoutes = require('./routes/auth')
 
 // Controllers
 
-const get404 = require('./controllers/error')
+const { get404, get500 } = require('./controllers/error')
 
 // db.execute('');
 
@@ -51,12 +51,14 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
   .then(user => {
-    console.log('user',user)
+    if (!user) {
+      return next()
+    }
 		req.user = user
 		next()
   })
   .catch(err => {
-    console.log(err)
+    next(new Error(err))
   })
 })
 
@@ -72,11 +74,15 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes)
 app.use(authRoutes)
 
-app.use((req, res, next) => {
-  res.status(404).render('404',{ 
-    pageTitle: 'Page Not Found',
-    path: '*'
-  })
+app.get('/500', get500)
+app.use(get404)
+app.use((error, req, res, next) => {
+  res.status(500).render('500',{
+    pageTitle: 'Error!',
+    path: '/500',
+    isLoggedIn: req.session.isLoggedIn,
+    csrfToken: req.csrfToken()
+ })
 })
 
 mongoose
