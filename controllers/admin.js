@@ -12,14 +12,23 @@ exports.getAddProduct =  (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, price, description, img } = req.body
-  const product = new Product({
-    title, 
-    price, 
-    description, 
-    img,
-    userId: req.user
-  })
+  const { title, price, description } = req.body
+  const image = req.file;
+  if (!image) {
+    return res.status(422).render('admin/edit-product', {
+      pageTitle: 'Add Product',
+      errorMessage: 'Attached file is not an image',
+      editing: false,
+      isError: true,
+      product: {
+        title,
+        price,
+        description,
+      },
+      validationErrors: []
+    })
+  }
+ 
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-product', {
@@ -31,11 +40,19 @@ exports.postAddProduct = (req, res, next) => {
         title,
         price,
         description,
-        img
       },
       validationErrors: errors.array()
     })
   }
+  const imgPath = image.path
+  const product = new Product({
+    title, 
+    price, 
+    description, 
+    img: `/${imgPath}`,
+    userId: req.user
+  })
+
   product.save()
   .then(result => {
     console.log('Product Created!')
@@ -73,6 +90,7 @@ exports.getEditProduct =  (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const { title, img, price, description, productId } = req.body
+  const image = req.file
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-product', {
@@ -84,7 +102,6 @@ exports.postEditProduct = (req, res, next) => {
         title,
         price,
         description,
-        img
       },
       validationErrors: errors.array()
     })
@@ -95,9 +112,11 @@ exports.postEditProduct = (req, res, next) => {
       return res.redirect('/')
     }
     product.title = title,
-    product.img = img,
     product.price = price,
     product.description = description
+    if (image) {
+      product.img = `/${image.path}`
+    }
     return product.save()
     .then(() => {
       console.log('Product Updated!')

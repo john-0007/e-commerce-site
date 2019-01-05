@@ -9,7 +9,7 @@ const router = express.Router()
 const { 
   getProducts, getProduct, getIndex, 
   getCart, postCart, getOrders, 
-  postOrder, postCartDeleteProduct } = require('../controllers/shop')
+  postOrder, postCartDeleteProduct, getInvoice } = require('../controllers/shop')
 
 router.get('/', getIndex)
 
@@ -26,5 +26,7 @@ router.post('/cart-delete-item', isAuth, postCartDeleteProduct)
 router.post('/create-order', isAuth, postOrder)
 
 router.get('/orders', isAuth, getOrders)
+
+router.get('/orders/:orderId', isAuth, getInvoice)
 
 module.exports = router;

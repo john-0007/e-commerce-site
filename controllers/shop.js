@@ -1,5 +1,9 @@
+const fs = require('fs')
+const path = require('path')
+
 const Product = require('../models/product')
 const Order = require('../models/order')
+
 
 exports.getProducts = (req, res, next) => {
   Product.find().then( products => {
@@ -108,8 +112,23 @@ exports.getOrders = (req,res, next) => {
     })
   })
 }
+
 exports.getCheckout = () => {
   res.render('shop/checkout', {
     pageTitle: 'Checkout',
+  })
+}
+
+exports.getInvoice = (req, res, next) => {
+  const orderId = req.params.orderId
+  const invoiceName = `invoice-${orderId}.pdf`
+  const invoicePath = path.join('data', 'invoices', invoiceName)
+  fs.read(invoicePath, (err, data) => {
+    if (err) {
+      return next(err)
+    }
+    res.setHeader('Content-Type', 'apllication/pdf')
+    res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"')
+    res.send(data)
   })
 }
